@@ -1,25 +1,12 @@
-import { motion, useScroll, useSpring } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { nav, profile } from "../data/content";
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 28,
-    restDelta: 0.001,
-  });
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Lock the page while the mobile sheet is open.
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -29,119 +16,91 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-        className="fixed inset-x-0 top-0 z-50"
-      >
-        <div
-          className={`transition-all duration-500 ${
-            scrolled
-              ? "border-b border-[var(--color-line)] bg-white/80 backdrop-blur-xl"
-              : "border-b border-transparent bg-transparent"
-          }`}
-        >
-          <div className="u-shell flex h-[68px] items-center justify-between md:h-[76px]">
-            <a
-              href="#top"
-              className="group flex items-center gap-2.5"
-              aria-label={profile.name}
-            >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-accent)] opacity-60" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[var(--color-accent)]" />
+      <header className="fixed inset-x-0 top-0 z-50">
+        <div className="shell flex h-[92px] items-center justify-between">
+          {/* Identity pill — avatar + name, mirroring the reference. */}
+          <motion.a
+            href="#top"
+            initial={{ opacity: 0, y: -18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
+            className="card flex items-center gap-3 rounded-full py-2 pr-2 pl-5"
+          >
+            <img
+              src={profile.photo}
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+            />
+            <span className="leading-tight">
+              <span className="display block text-[15px]">أويس</span>
+              <span className="block text-[11px] text-[var(--color-muted)]">
+                علوم بيانات واستشارات
               </span>
-              <span className="text-[15px] font-medium tracking-tight">
-                {profile.name}
-              </span>
-            </a>
+            </span>
+          </motion.a>
 
-            <nav className="hidden items-center gap-9 md:flex">
-              {nav.map((item) => (
-                <a
+          {/* Menu trigger */}
+          <motion.button
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={open}
+            initial={{ opacity: 0, y: -18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.18 }}
+            className="card relative z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full"
+          >
+            <span className="flex flex-col gap-[5px]">
+              <motion.span
+                animate={{ rotate: open ? 45 : 0, y: open ? 3.5 : 0 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                className="block h-[1.6px] w-[18px] bg-[var(--color-ink)]"
+              />
+              <motion.span
+                animate={{ rotate: open ? -45 : 0, y: open ? -3.5 : 0 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                className="block h-[1.6px] w-[18px] bg-[var(--color-ink)]"
+              />
+            </span>
+          </motion.button>
+        </div>
+      </header>
+
+      {/* Overlay menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 bg-[var(--color-page)]/95 backdrop-blur-xl"
+          >
+            <div className="shell flex h-full flex-col justify-center">
+              {nav.map((item, i) => (
+                <motion.a
                   key={item.href}
                   href={item.href}
-                  className="u-underline text-[14px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+                  onClick={() => setOpen(false)}
+                  initial={{ opacity: 0, y: 26 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ delay: 0.08 + i * 0.07, duration: 0.6, ease: EASE }}
+                  className="display group flex items-baseline gap-4 border-b border-[var(--color-line)] py-6 text-[34px] md:text-[52px]"
                 >
-                  {item.label}
-                </a>
+                  <span className="mono text-[13px] text-[var(--color-faint)]">
+                    0{i + 1}
+                  </span>
+                  <span className="transition-transform duration-500 group-hover:-translate-x-2">
+                    {item.label}
+                  </span>
+                </motion.a>
               ))}
-            </nav>
-
-            <a
-              href="#contact"
-              className="hidden rounded-full bg-[var(--color-ink)] px-5 py-2.5 text-[14px] text-white transition-all duration-300 hover:bg-[var(--color-accent)] md:inline-block"
-            >
-              اتصل بي
-            </a>
-
-            <button
-              onClick={() => setOpen((v) => !v)}
-              aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
-              aria-expanded={open}
-              className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] md:hidden"
-            >
-              <span
-                className={`h-[1.5px] w-5 bg-[var(--color-ink)] transition-all duration-300 ${
-                  open ? "translate-y-[3.25px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-5 bg-[var(--color-ink)] transition-all duration-300 ${
-                  open ? "-translate-y-[3.25px] -rotate-45" : ""
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Scroll progress hairline */}
-        <motion.div
-          style={{ scaleX: progress, transformOrigin: "right" }}
-          className="h-[2px] w-full bg-[var(--color-accent)]"
-        />
-      </motion.header>
-
-      {/* Mobile sheet */}
-      <motion.div
-        initial={false}
-        animate={{
-          clipPath: open
-            ? "inset(0% 0% 0% 0%)"
-            : "inset(0% 0% 100% 0%)",
-        }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed inset-0 z-40 bg-white md:hidden ${
-          open ? "" : "pointer-events-none"
-        }`}
-      >
-        <div className="u-shell flex h-full flex-col justify-center gap-2">
-          {nav.map((item, i) => (
-            <motion.a
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              initial={{ opacity: 0, y: 20 }}
-              animate={open ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: open ? 0.15 + i * 0.06 : 0, duration: 0.5 }}
-              className="border-b border-[var(--color-line)] py-5 text-[28px] font-light"
-            >
-              {item.label}
-            </motion.a>
-          ))}
-          <motion.a
-            href="#contact"
-            onClick={() => setOpen(false)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={open ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: open ? 0.15 + nav.length * 0.06 : 0 }}
-            className="mt-8 rounded-full bg-[var(--color-ink)] px-6 py-4 text-center text-white"
-          >
-            اتصل بي
-          </motion.a>
-        </div>
-      </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

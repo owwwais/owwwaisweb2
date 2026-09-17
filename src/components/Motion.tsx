@@ -161,10 +161,10 @@ export function Marquee({
   className?: string;
 }) {
   return (
-    <div className={`u-marquee u-fade-x overflow-hidden ${className}`}>
+    <div className={`marquee fade-x overflow-hidden ${className}`}>
       <div
-        className="u-marquee-track"
-        style={{ ["--marquee-duration" as string]: `${duration}s` }}
+        className="marquee-track"
+        style={{ ["--dur" as string]: `${duration}s` }}
       >
         <div className="flex shrink-0">{children}</div>
         <div className="flex shrink-0" aria-hidden="true">
