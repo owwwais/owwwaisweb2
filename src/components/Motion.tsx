@@ -2,36 +2,56 @@ import {
   motion,
   useInView,
   useMotionValue,
+  useReducedMotion,
+  useScroll,
   useSpring,
   useTransform,
-  useScroll,
   type Variants,
 } from "motion/react";
 import { useEffect, useRef, type ReactNode } from "react";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+/**
+ * Apple's product-page easing. Slow out of the gate, long glide, dead stop —
+ * it is what makes their reveals feel weighted rather than sprung.
+ */
+export const EASE = [0.32, 0.72, 0, 1] as const;
+
+/** Soft spring for anything that tracks a pointer or a scrubbed value. */
+export const SPRING = { stiffness: 140, damping: 24, mass: 0.6 } as const;
 
 /* ------------------------------------------------------------------
-   Reveal — the workhorse. Fades and lifts a block as it scrolls in.
+   Reveal — opacity + lift + a touch of defocus. The blur is the part
+   that reads as "Apple": content resolves into place instead of
+   sliding into it.
    ------------------------------------------------------------------ */
 export function Reveal({
   children,
   delay = 0,
-  y = 28,
+  y = 26,
+  blur = 6,
   className,
 }: {
   children: ReactNode;
   delay?: number;
   y?: number;
+  blur?: number;
   className?: string;
 }) {
+  const reduce = useReducedMotion();
+
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.85, delay, ease: EASE }}
+      initial={
+        reduce
+          ? { opacity: 0 }
+          : { opacity: 0, y, filter: `blur(${blur}px)` }
+      }
+      whileInView={
+        reduce ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }
+      }
+      viewport={{ once: true, margin: "-12% 0px -12% 0px" }}
+      transition={{ duration: 0.95, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -39,79 +59,30 @@ export function Reveal({
 }
 
 /* ------------------------------------------------------------------
-   WordReveal — headline animates word by word, each word rising out
-   of a clipping mask. This is the signature motion of the reference.
+   Stagger helpers — for lists that should resolve one after another.
    ------------------------------------------------------------------ */
-const wordContainer: Variants = {
+export const staggerParent: Variants = {
   hidden: {},
-  show: (stagger: number) => ({
-    transition: { staggerChildren: stagger },
-  }),
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
 };
 
-const wordChild: Variants = {
-  hidden: { y: "110%" },
-  show: { y: "0%", transition: { duration: 0.9, ease: EASE } },
+export const staggerChild: Variants = {
+  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.9, ease: EASE },
+  },
 };
-
-export function WordReveal({
-  words,
-  className,
-  stagger = 0.06,
-  accentFrom,
-}: {
-  words: string[];
-  className?: string;
-  stagger?: number;
-  /** Index from which words render in the accent colour. */
-  accentFrom?: number;
-}) {
-  return (
-    <motion.h2
-      className={className}
-      variants={wordContainer}
-      custom={stagger}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-70px" }}
-    >
-      {words.map((w, i) => (
-        <span
-          key={`${w}-${i}`}
-          style={{
-            display: "inline-block",
-            overflow: "hidden",
-            verticalAlign: "bottom",
-            paddingBottom: "0.12em",
-            marginBottom: "-0.12em",
-          }}
-        >
-          <motion.span
-            variants={wordChild}
-            style={{
-              display: "inline-block",
-              color:
-                accentFrom !== undefined && i >= accentFrom
-                  ? "var(--color-accent)"
-                  : undefined,
-            }}
-          >
-            {w}
-          </motion.span>
-          {i < words.length - 1 ? " " : ""}
-        </span>
-      ))}
-    </motion.h2>
-  );
-}
 
 /* ------------------------------------------------------------------
-   Counter — counts up to a target once visible.
+   Counter — eases to a number, then stops. No bounce.
    ------------------------------------------------------------------ */
 export function Counter({
   to,
   suffix = "",
-  duration = 1.9,
+  duration = 1.8,
 }: {
   to: number;
   suffix?: string;
@@ -119,14 +90,12 @@ export function Counter({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
+  const reduce = useReducedMotion();
 
   useEffect(() => {
-    if (!inView || !ref.current) return;
     const el = ref.current;
+    if (!inView || !el) return;
 
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
     if (reduce) {
       el.textContent = `${to}${suffix}`;
       return;
@@ -136,20 +105,19 @@ export function Counter({
     const start = performance.now();
     const tick = (now: number) => {
       const p = Math.min((now - start) / (duration * 1000), 1);
-      // easeOutExpo — fast then settling, reads as "landing" on a number
       const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
       el.textContent = `${Math.round(eased * to)}${suffix}`;
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, to, suffix, duration]);
+  }, [inView, to, suffix, duration, reduce]);
 
   return <span ref={ref}>0{suffix}</span>;
 }
 
 /* ------------------------------------------------------------------
-   Marquee — infinite horizontal scroll, pauses on hover.
+   Marquee — continuous drift, pauses on hover.
    ------------------------------------------------------------------ */
 export function Marquee({
   children,
@@ -176,11 +144,11 @@ export function Marquee({
 }
 
 /* ------------------------------------------------------------------
-   Parallax — subtle depth as the section passes the viewport.
+   Parallax — scroll-linked drift, spring-smoothed so it never judders.
    ------------------------------------------------------------------ */
 export function Parallax({
   children,
-  distance = 60,
+  distance = 48,
   className,
 }: {
   children: ReactNode;
@@ -188,25 +156,27 @@ export function Parallax({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
+  const raw = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
+  const y = useSpring(raw, SPRING);
 
   return (
     <div ref={ref} className={className}>
-      <motion.div style={{ y }}>{children}</motion.div>
+      <motion.div style={reduce ? undefined : { y }}>{children}</motion.div>
     </div>
   );
 }
 
 /* ------------------------------------------------------------------
-   Magnetic — button leans toward the cursor, then springs back.
+   Magnetic — the button leans toward the cursor and springs back.
    ------------------------------------------------------------------ */
 export function Magnetic({
   children,
-  strength = 0.35,
+  strength = 0.3,
   className,
 }: {
   children: ReactNode;
@@ -214,13 +184,16 @@ export function Magnetic({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const x = useSpring(mx, { stiffness: 220, damping: 18, mass: 0.4 });
-  const y = useSpring(my, { stiffness: 220, damping: 18, mass: 0.4 });
+  const x = useSpring(mx, { stiffness: 200, damping: 17, mass: 0.35 });
+  const y = useSpring(my, { stiffness: 200, damping: 17, mass: 0.35 });
+
+  if (reduce) return <span className={className}>{children}</span>;
 
   return (
-    <motion.div
+    <motion.span
       ref={ref}
       className={className}
       style={{ x, y, display: "inline-block" }}
@@ -236,6 +209,6 @@ export function Magnetic({
       }}
     >
       {children}
-    </motion.div>
+    </motion.span>
   );
 }

@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
+import { EASE } from "./Motion";
 import { cta, services } from "../data/content";
 import { SectionHead } from "./Ui";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Services() {
   return (
@@ -11,10 +11,10 @@ export default function Services() {
       <section className="band py-16 md:py-20">
         <div className="shell">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30, filter: "blur(5px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: EASE }}
+            transition={{ duration: 0.95, ease: EASE }}
             className="rounded-[32px] bg-[var(--color-ink)] px-8 py-14 text-center md:px-12 md:py-16"
           >
             <h3 className="display text-[28px] text-white md:text-[40px]">
@@ -38,10 +38,10 @@ export default function Services() {
             {services.groups.map((g, i) => (
               <motion.div
                 key={g.title}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 32, filter: "blur(6px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.75, ease: EASE, delay: i * 0.1 }}
+                transition={{ duration: 0.95, ease: EASE, delay: i * 0.1 }}
                 className="card p-7"
               >
                 <h3 className="display mb-5 text-[20px]">{g.title}</h3>

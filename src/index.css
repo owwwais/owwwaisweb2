@@ -53,15 +53,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-
-    /* The dot-grid canvas the reference sits on. */
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      rgba(0, 0, 0, 0.11) 1px,
-      transparent 0
-    );
-    background-size: 26px 26px;
-    background-attachment: fixed;
   }
 
   ::selection {
@@ -104,6 +95,22 @@
     padding-inline: 20px;
   }
 
+  /* The dot-grid canvas. A fixed layer rather than `background-attachment:
+     fixed` on the body, which forces a full-viewport repaint every scroll
+     frame. */
+  .canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(0, 0, 0, 0.11) 1px,
+      transparent 0
+    );
+    background-size: 26px 26px;
+  }
+
   /* The two hairlines that frame the page on desktop. */
   .rails {
     position: fixed;
@@ -144,6 +151,15 @@
     color: var(--color-ink);
   }
 
+  /* Card/product titles: same face, lighter weight, clear hierarchy. */
+  .display-soft {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-feature-settings: "ss01";
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
   .lede {
     color: var(--color-muted);
     line-height: 1.95;
@@ -161,11 +177,31 @@
   }
 
   .card {
+    position: relative;
     background: var(--color-card);
     border-radius: var(--radius-card);
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.04),
       0 8px 24px -16px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Cursor-tracked sheen inside a card. Sits above the card content at a
+     very low alpha, so it warms the surface without washing out text. */
+  .spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      var(--s-size, 300px) circle at var(--sx, 50%) var(--sy, 50%),
+      var(--s-color, rgba(254, 118, 23, 0.1)),
+      transparent 70%
+    );
+  }
+  .group:hover > .spotlight {
+    opacity: 1;
   }
 
   /* The reference's signature pill button. */

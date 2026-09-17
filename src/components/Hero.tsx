@@ -1,8 +1,9 @@
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { hero, stack, stats } from "../data/content";
-import { Counter, Marquee } from "./Motion";
+import { Counter, EASE, Marquee } from "./Motion";
+import { PointerField, useCursorLean } from "./Pointer";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
  * The wordmark rises out of a mask as ONE unit. Splitting Arabic into
@@ -38,9 +39,33 @@ function Wordmark({ text }: { text: string }) {
 }
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  // The fold settles back and softens as the next section rises over it.
+  const lean = useCursorLean(9);
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+  const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+
   return (
-    <section id="top" className="relative pt-[150px] md:pt-[190px]">
-      <div className="shell text-center">
+    <section
+      ref={ref}
+      id="top"
+      className="relative overflow-hidden pt-[150px] md:pt-[190px]"
+    >
+      <PointerField />
+
+      <motion.div
+        style={reduce ? undefined : { y, scale, opacity }}
+        className="relative z-10 shell text-center"
+      >
+        <motion.div style={lean.active ? { x: lean.x, y: lean.y } : undefined}>
         <Wordmark text={hero.title} />
 
         <motion.p
@@ -65,7 +90,8 @@ export default function Hero() {
             {hero.secondary.label}
           </a>
         </motion.div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Proof band: tooling marquee + headline numbers */}
       <motion.div
