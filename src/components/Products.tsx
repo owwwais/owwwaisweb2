@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Spotlight } from "./Pointer";
 import { EASE } from "./Motion";
 import { products } from "../data/content";
 import { SectionHead } from "./Ui";
@@ -20,6 +21,7 @@ export default function Products() {
               transition={{ duration: 0.9, ease: EASE, delay: (i % 3) * 0.08 }}
               className="card group flex flex-col p-7 transition-transform duration-500 hover:-translate-y-1.5"
             >
+              <Spotlight />
               <span className="mono text-[11px] text-[var(--color-faint)]">
                 {String(i + 1).padStart(2, "0")}
               </span>

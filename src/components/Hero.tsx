@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { hero, stack, stats } from "../data/content";
 import { Counter, EASE, Marquee } from "./Motion";
+import { PointerField, useCursorLean } from "./Pointer";
 
 
 /**
@@ -46,16 +47,25 @@ export default function Hero() {
   });
 
   // The fold settles back and softens as the next section rises over it.
+  const lean = useCursorLean(9);
+
   const y = useTransform(scrollYProgress, [0, 1], [0, 90]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
   return (
-    <section ref={ref} id="top" className="relative pt-[150px] md:pt-[190px]">
+    <section
+      ref={ref}
+      id="top"
+      className="relative overflow-hidden pt-[150px] md:pt-[190px]"
+    >
+      <PointerField />
+
       <motion.div
         style={reduce ? undefined : { y, scale, opacity }}
-        className="shell text-center"
+        className="relative z-10 shell text-center"
       >
+        <motion.div style={lean.active ? { x: lean.x, y: lean.y } : undefined}>
         <Wordmark text={hero.title} />
 
         <motion.p
@@ -79,6 +89,7 @@ export default function Hero() {
           <a href={hero.secondary.href} className="pill pill-light">
             {hero.secondary.label}
           </a>
+        </motion.div>
         </motion.div>
       </motion.div>
 

@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { posts } from "../data/content";
+import { Spotlight } from "./Pointer";
 import { EASE } from "./Motion";
 import { SectionHead } from "./Ui";
 
@@ -25,6 +26,7 @@ export default function Blog() {
               transition={{ duration: 0.9, ease: EASE, delay: i * 0.1 }}
               className="card group flex flex-col overflow-hidden transition-transform duration-[600ms] ease-out hover:-translate-y-1.5"
             >
+              <Spotlight />
               <div className="overflow-hidden">
                 <img
                   src={post.img}

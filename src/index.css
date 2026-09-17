@@ -170,11 +170,31 @@
   }
 
   .card {
+    position: relative;
     background: var(--color-card);
     border-radius: var(--radius-card);
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.04),
       0 8px 24px -16px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Cursor-tracked sheen inside a card. Sits above the card content at a
+     very low alpha, so it warms the surface without washing out text. */
+  .spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      var(--s-size, 300px) circle at var(--sx, 50%) var(--sy, 50%),
+      var(--s-color, rgba(254, 118, 23, 0.1)),
+      transparent 70%
+    );
+  }
+  .group:hover > .spotlight {
+    opacity: 1;
   }
 
   /* The reference's signature pill button. */

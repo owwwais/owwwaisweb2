@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 import { projects, type Project } from "../data/content";
+import { Spotlight } from "./Pointer";
 import { EASE } from "./Motion";
 import { HoverCue, SectionHead } from "./Ui";
 
@@ -14,6 +15,7 @@ function Card({ p, i }: { p: Project; i: number }) {
       transition={{ duration: 0.85, ease: EASE, delay: Math.min(i, 4) * 0.07 }}
       className="card group overflow-hidden transition-transform duration-[600ms] ease-out hover:-translate-y-1.5"
     >
+      <Spotlight />
       {/* Logo lockups are never cropped — `contain` keeps every mark whole. */}
       <div className="relative overflow-hidden bg-[var(--color-card)]">
         <img

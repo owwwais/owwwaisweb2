@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { affiliations, profile, stats } from "../data/content";
 import { Counter, EASE } from "./Motion";
+import { Spotlight } from "./Pointer";
 import { SectionHead } from "./Ui";
 
 /**
@@ -43,8 +44,9 @@ export default function Trusted() {
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 0.85, ease: EASE, delay: i * 0.07 }}
-              className="card flex items-center gap-4 px-6 py-5 transition-transform duration-[600ms] ease-out hover:-translate-y-1"
+              className="card group flex items-center gap-4 px-6 py-5 transition-transform duration-[600ms] ease-out hover:-translate-y-1"
             >
+              <Spotlight size={220} />
               <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-green)]" />
               <span>
                 <span className="display block text-[15px]">{a.name}</span>
