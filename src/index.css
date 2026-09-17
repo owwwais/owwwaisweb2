@@ -2,36 +2,35 @@
 @import "./fonts.css";
 
 /* ============================================================
-   Design tokens — light, airy, warm-neutral.
-   Palette sampled from the reference: white base, #F7F7F7
-   surfaces, near-black ink, terracotta accent.
+   Tokens sampled from rzgfolio.framer.ai's own computed styles.
    ============================================================ */
 @theme {
-  --color-page: #ffffff;
-  --color-surface: #f7f7f7;
-  --color-surface-2: #f1efec;
+  --color-page: #f7f7f7;
+  --color-card: #ffffff;
   --color-ink: #1a1a1a;
   --color-ink-2: #2e2e2e;
-  --color-muted: #6f6f6f;
-  --color-faint: #9b9b9b;
-  --color-line: rgba(0, 0, 0, 0.08);
-  --color-line-2: rgba(0, 0, 0, 0.14);
-  --color-accent: #d97757;
-  --color-accent-soft: #f6e5de;
+  --color-muted: #6b6b6b;
+  --color-faint: #9a9a9a;
+  --color-line: rgba(0, 0, 0, 0.07);
+  --color-line-2: rgba(0, 0, 0, 0.12);
 
+  --color-green: #11b77a;
+  --color-orange: #fe7617;
+  --color-blue: #1b5fff;
+
+  --font-display: "Thmanyah Sans", "IBM Plex Sans Arabic", sans-serif;
   --font-sans: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Aref Ruqaa", "IBM Plex Sans Arabic", serif;
   --font-mono: "Fragment Mono", ui-monospace, monospace;
 
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius-card: 20px;
+  --radius-inner: 16px;
+  --radius-xl: 32px;
 }
 
 :root {
   color-scheme: light;
-  /* ss01 is declared so that swapping in a font that ships an
-     extended-finals stylistic set activates it with no code change.
-     Fonts without ss01 simply ignore it. */
-  --arabic-features: "ss01" 1, "calt" 1, "liga" 1, "kern" 1;
+  --shell: 1080px;
+  --rail: rgba(0, 0, 0, 0.06);
 }
 
 @layer base {
@@ -46,19 +45,27 @@
 
   body {
     margin: 0;
-    background: var(--color-page);
+    background-color: var(--color-page);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-feature-settings: var(--arabic-features);
     font-weight: 400;
-    line-height: 1.75;
+    line-height: 1.8;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+
+    /* The dot-grid canvas the reference sits on. */
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(0, 0, 0, 0.11) 1px,
+      transparent 0
+    );
+    background-size: 26px 26px;
+    background-attachment: fixed;
   }
 
   ::selection {
-    background: var(--color-accent);
+    background: var(--color-ink);
     color: #fff;
   }
 
@@ -69,26 +76,17 @@
     background: var(--color-page);
   }
   ::-webkit-scrollbar-thumb {
-    background: #d8d8d8;
+    background: #d5d5d5;
     border-radius: 99px;
     border: 3px solid var(--color-page);
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #bdbdbd;
-  }
 
   a {
-    color: inherit;
     text-decoration: none;
-  }
-
-  button {
-    font: inherit;
-    color: inherit;
   }
 }
 
-@keyframes marquee-rtl {
+@keyframes marquee-x {
   from {
     transform: translate3d(0, 0, 0);
   }
@@ -98,108 +96,140 @@
 }
 
 @layer components {
-  /* ---------- Typography helpers ---------- */
-  .u-display {
+  /* Centre column, flanked by the vertical rails. */
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+
+  /* The two hairlines that frame the page on desktop. */
+  .rails {
+    position: fixed;
+    inset-block: 0;
+    left: 50%;
+    width: var(--shell);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .rails::before,
+  .rails::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    width: 1px;
+    background: var(--rail);
+  }
+  .rails::before {
+    left: 0;
+  }
+  .rails::after {
+    right: 0;
+  }
+
+  @media (max-width: 1160px) {
+    .rails {
+      display: none;
+    }
+  }
+
+  /* Display type: Thmanyah with the extended finals switched on. */
+  .display {
     font-family: var(--font-display);
-    font-weight: 400;
-    line-height: 1.5;
+    font-weight: 700;
+    font-feature-settings: "ss01";
+    line-height: 1.4;
+    color: var(--color-ink);
   }
 
-  /* Latin/numerals ONLY — Fragment Mono has no Arabic coverage, and its
-     tracking breaks Arabic letter joining. Use .u-meta for Arabic labels. */
-  .u-mono {
-    font-family: var(--font-mono);
-    font-feature-settings: normal;
-    letter-spacing: 0.02em;
-  }
-
-  /* Small label text that may contain Arabic. */
-  .u-meta {
-    font-family: var(--font-sans);
-    font-weight: 500;
-    letter-spacing: 0;
-  }
-
-  /* Tight, balanced headline setting for Arabic */
-  .u-head {
-    font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: -0.01em;
-    text-wrap: balance;
-  }
-
-  .u-lede {
+  .lede {
     color: var(--color-muted);
-    font-weight: 300;
     line-height: 1.95;
     text-wrap: pretty;
   }
 
-  /* ---------- Layout ---------- */
-  .u-shell {
-    width: 100%;
-    max-width: 1180px;
-    margin-inline: auto;
-    padding-inline: 24px;
+  /* Latin / numerals only — Fragment Mono has no Arabic glyphs. */
+  .mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
   }
 
-  @media (min-width: 768px) {
-    .u-shell {
-      padding-inline: 40px;
-    }
+  .band {
+    border-top: 1px solid var(--color-line);
   }
 
-  /* Generous vertical rhythm — the whitespace does the work */
-  .u-section {
-    padding-block: 96px;
+  .card {
+    background: var(--color-card);
+    border-radius: var(--radius-card);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 8px 24px -16px rgba(0, 0, 0, 0.18);
   }
 
-  @media (min-width: 768px) {
-    .u-section {
-      padding-block: 150px;
-    }
+  /* The reference's signature pill button. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 1000px;
+    padding: 15px 30px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-feature-settings: "ss01";
+    font-size: 16px;
+    line-height: 1;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.35s,
+      color 0.35s;
+  }
+  .pill:hover {
+    transform: translateY(-2px);
   }
 
-  /* ---------- Motion primitives ---------- */
+  .pill-dark {
+    background: var(--color-ink);
+    color: #fff;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.18),
+      0 12px 28px -12px rgba(0, 0, 0, 0.45);
+  }
 
-  .u-marquee-track {
+  .pill-light {
+    background: var(--color-card);
+    color: var(--color-ink);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.06),
+      0 10px 24px -14px rgba(0, 0, 0, 0.3);
+  }
+
+  .marquee-track {
     display: flex;
     width: max-content;
-    animation: marquee-rtl var(--marquee-duration, 40s) linear infinite;
+    animation: marquee-x var(--dur, 40s) linear infinite;
   }
-
-  .u-marquee:hover .u-marquee-track {
+  .marquee:hover .marquee-track {
     animation-play-state: paused;
   }
 
-  /* Soft edge fade so marquees dissolve instead of cutting */
-  .u-fade-x {
+  .fade-x {
     -webkit-mask-image: linear-gradient(
       to right,
       transparent,
-      #000 12%,
-      #000 88%,
+      #000 10%,
+      #000 90%,
       transparent
     );
     mask-image: linear-gradient(
       to right,
       transparent,
-      #000 12%,
-      #000 88%,
+      #000 10%,
+      #000 90%,
       transparent
     );
-  }
-
-  .u-underline {
-    background-image: linear-gradient(var(--color-accent), var(--color-accent));
-    background-repeat: no-repeat;
-    background-position: 100% 100%;
-    background-size: 0% 1.5px;
-    transition: background-size 0.45s var(--ease-out-soft);
-  }
-
-  .u-underline:hover {
-    background-size: 100% 1.5px;
   }
 }
 
@@ -207,7 +237,7 @@
   html {
     scroll-behavior: auto;
   }
-  .u-marquee-track {
+  .marquee-track {
     animation: none;
   }
   *,

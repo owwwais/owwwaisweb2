@@ -1,126 +1,108 @@
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
-import { hero, profile, stack } from "../data/content";
-import { Magnetic, Marquee, WordReveal } from "./Motion";
+import { motion } from "motion/react";
+import { hero, stack, stats } from "../data/content";
+import { Counter, Marquee } from "./Motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export default function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  // The hero recedes gently as the next section rises over it.
-  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
+/**
+ * The wordmark rises out of a mask as ONE unit. Splitting Arabic into
+ * per-letter spans risks breaking the script's cursive shaping, and the
+ * reference reveals whole words anyway.
+ */
+function Wordmark({ text }: { text: string }) {
   return (
-    <section
-      ref={ref}
-      id="top"
-      className="relative overflow-hidden pt-[136px] pb-20 md:pt-[190px] md:pb-28"
+    <h1
+      className="display whitespace-nowrap"
+      style={{ fontSize: "clamp(56px, 15vw, 128px)", lineHeight: 1.35 }}
     >
-      {/* Soft ambient wash — keeps the white from reading as flat */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full opacity-[0.55] blur-[120px]"
+      <span
         style={{
-          background:
-            "radial-gradient(circle at 50% 50%, #f6e5de 0%, #fdf6f2 45%, transparent 70%)",
+          display: "inline-block",
+          overflow: "hidden",
+          verticalAlign: "bottom",
+          paddingBottom: "0.1em",
+          marginBottom: "-0.1em",
         }}
-      />
-
-      <motion.div style={{ y, opacity }} className="u-shell relative">
-        {/* Availability pill */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
-          className="mb-9 inline-flex items-center gap-2.5 rounded-full border border-[var(--color-line)] bg-white/70 px-4 py-2 backdrop-blur"
+      >
+        <motion.span
+          style={{ display: "inline-block" }}
+          initial={{ y: "115%" }}
+          animate={{ y: "0%" }}
+          transition={{ duration: 1.1, ease: EASE, delay: 0.25 }}
         >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-70" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          </span>
-          <span className="text-[13px] text-[var(--color-muted)]">
-            {hero.kicker}
-          </span>
-        </motion.div>
+          {text}
+        </motion.span>
+      </span>
+    </h1>
+  );
+}
 
-        <WordReveal
-          words={hero.headline}
-          stagger={0.055}
-          accentFrom={7}
-          className="u-head max-w-[17ch] text-[36px] leading-[1.28] sm:text-[52px] md:text-[68px] lg:text-[78px]"
-        />
+export default function Hero() {
+  return (
+    <section id="top" className="relative pt-[150px] md:pt-[190px]">
+      <div className="shell text-center">
+        <Wordmark text={hero.title} />
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 0.85 }}
-          className="u-lede mt-8 max-w-[52ch] text-[16px] md:mt-10 md:text-[18px]"
+          transition={{ duration: 0.9, ease: EASE, delay: 0.75 }}
+          className="lede mx-auto mt-6 max-w-[54ch] text-[15px] md:text-[17px]"
         >
           {hero.lede}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 1 }}
-          className="mt-11 flex flex-wrap items-center gap-4 md:mt-14"
+          transition={{ duration: 0.9, ease: EASE, delay: 0.9 }}
+          className="mt-11 flex flex-wrap items-center justify-center gap-4"
         >
-          <Magnetic>
-            <a
-              href={hero.primaryCta.href}
-              className="group inline-flex items-center gap-3 rounded-full bg-[var(--color-ink)] px-7 py-4 text-[15px] text-white transition-colors duration-300 hover:bg-[var(--color-accent)]"
-            >
-              {hero.primaryCta.label}
-              <span className="transition-transform duration-300 group-hover:-translate-x-1">
-                ←
-              </span>
-            </a>
-          </Magnetic>
-
-          <Magnetic>
-            <a
-              href={hero.secondaryCta.href}
-              className="inline-flex items-center gap-3 rounded-full border border-[var(--color-line-2)] px-7 py-4 text-[15px] transition-colors duration-300 hover:border-[var(--color-ink)]"
-            >
-              {hero.secondaryCta.label}
-            </a>
-          </Magnetic>
-
-          <span className="u-meta mr-1 text-[13px] text-[var(--color-faint)]">
-            {hero.proof}
-          </span>
+          <a href={hero.primary.href} className="pill pill-dark">
+            {hero.primary.label}
+          </a>
+          <a href={hero.secondary.href} className="pill pill-light">
+            {hero.secondary.label}
+          </a>
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* Tooling marquee — quiet texture at the base of the fold */}
+      {/* Proof band: tooling marquee + headline numbers */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, delay: 1.25 }}
-        className="mt-20 border-y border-[var(--color-line)] py-5 md:mt-28"
+        transition={{ duration: 1, delay: 1.15 }}
+        className="band mt-20 py-7 md:mt-28"
       >
-        <Marquee duration={55}>
-          {stack.map((s, i) => (
-            <span
-              key={`${s}-${i}`}
-              className="u-mono flex items-center gap-8 px-8 text-[13px] whitespace-nowrap text-[var(--color-faint)]"
-            >
-              {s}
-              <span className="text-[var(--color-accent)]">✦</span>
-            </span>
-          ))}
-        </Marquee>
-      </motion.div>
+        <div className="shell flex flex-col items-center gap-7 md:flex-row md:justify-between">
+          <div className="flex shrink-0 items-center gap-5">
+            {stats.slice(0, 2).map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="display text-[26px] leading-none">
+                  <Counter to={s.value} suffix={s.suffix} />
+                </div>
+                <div className="mt-1 text-[12px] text-[var(--color-muted)]">
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
 
-      <span className="sr-only">
-        {profile.name} — {profile.role}
-      </span>
+          <div className="w-full min-w-0 md:max-w-[620px]">
+            <Marquee duration={46}>
+              {stack.map((s, i) => (
+                <span
+                  key={`${s}-${i}`}
+                  className="mono flex items-center gap-7 px-7 text-[13px] whitespace-nowrap text-[var(--color-faint)]"
+                >
+                  {s}
+                  <span className="text-[var(--color-orange)]">✦</span>
+                </span>
+              ))}
+            </Marquee>
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
