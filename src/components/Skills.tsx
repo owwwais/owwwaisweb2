@@ -1,5 +1,3 @@
-import { motion } from "motion/react";
-import { EASE } from "./Motion";
 import { skillColumns } from "../data/content";
 import { SectionHead } from "./Ui";
 
@@ -13,13 +11,9 @@ export default function Skills() {
 
         <div className="grid gap-5 md:grid-cols-3">
           {skillColumns.map((col, i) => (
-            <motion.div
+            <div
               key={col.title}
-              initial={{ opacity: 0, y: 34, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.95, ease: EASE, delay: i * 0.12 }}
-              className="overflow-hidden rounded-[20px] bg-[var(--color-card)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.18)]"
+              className="reveal overflow-hidden rounded-[20px] bg-[var(--color-card)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.18)]" style={{ ["--d" as string]: `${i * 0.12}s` }}
             >
               <div
                 className="display px-6 py-4 text-center text-[17px] text-white"
@@ -37,7 +31,7 @@ export default function Skills() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

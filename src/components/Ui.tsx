@@ -1,30 +1,12 @@
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { EASE } from "./Motion";
-
-const parent: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.075 } },
-};
-
-/**
- * Words are the smallest unit we ever animate. Splitting Arabic any finer
- * puts each letter in its own box and the script stops joining — the whole
- * word would render as loose, disconnected glyphs.
- */
-const wordV: Variants = {
-  hidden: { y: "108%", opacity: 0 },
-  show: {
-    y: "0%",
-    opacity: 1,
-    transition: { duration: 1, ease: EASE },
-  },
-};
+import { useReveal } from "./Reveal";
 
 export function SectionHead({
   text,
   className = "",
-  as = "h2",
+  as: Tag = "h2",
   align = "center",
 }: {
   text: string;
@@ -32,30 +14,13 @@ export function SectionHead({
   as?: "h2" | "h3";
   align?: "center" | "start";
 }) {
-  const Tag = as === "h2" ? motion.h2 : motion.h3;
-  const reduce = useReducedMotion();
+  const ref = useReveal<HTMLHeadingElement>();
   const words = text.split(" ");
-
-  if (reduce) {
-    const Plain = as;
-    return (
-      <Plain
-        className={`display text-[30px] sm:text-[40px] md:text-[54px] ${
-          align === "center" ? "text-center" : ""
-        } ${className}`}
-      >
-        {text}
-      </Plain>
-    );
-  }
 
   return (
     <Tag
-      variants={parent}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-14% 0px -14% 0px" }}
-      className={`display text-[30px] sm:text-[40px] md:text-[54px] ${
+      ref={ref}
+      className={`reveal-head display text-[30px] sm:text-[40px] md:text-[54px] ${
         align === "center" ? "text-center" : ""
       } ${className}`}
     >
@@ -65,10 +30,13 @@ export function SectionHead({
           className="inline-block overflow-hidden align-bottom"
           style={{ paddingBottom: "0.16em", marginBottom: "-0.16em" }}
         >
-          <motion.span variants={wordV} className="inline-block">
+          <span
+            className="reveal-word"
+            style={{ ["--d" as string]: `${i * 0.07}s` }}
+          >
             {w}
-          </motion.span>
-          {i < words.length - 1 && " "}
+          </span>
+          {i < words.length - 1 && "\u00A0"}
         </span>
       ))}
     </Tag>

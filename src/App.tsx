@@ -7,12 +7,15 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Products from "./components/Products";
+import { useRevealScanner } from "./components/Reveal";
 import Services from "./components/Services";
 import Skills from "./components/Skills";
 import Trusted from "./components/Trusted";
 import Work from "./components/Work";
 
 export default function App() {
+  useRevealScanner();
+
   return (
     // Framer animations are JS-driven, so the CSS reduced-motion block does not
     // reach them; this makes them honour the OS setting too.

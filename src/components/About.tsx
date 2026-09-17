@@ -1,6 +1,5 @@
-import { motion } from "motion/react";
 import { about, method, timeline } from "../data/content";
-import { EASE, Reveal } from "./Motion";
+import { Reveal } from "./Motion";
 import ProfileCard from "./ProfileCard";
 import { SectionHead } from "./Ui";
 
@@ -56,14 +55,10 @@ export default function About() {
 
           <div className="grid gap-3">
             {timeline.items.map((t, i) => (
-              <motion.div
+              <div
                 key={t.title}
-                initial={{ opacity: 0, y: 26, filter: "blur(5px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.9, ease: EASE, delay: i * 0.07 }}
-                className="card flex flex-wrap items-center justify-between gap-3 px-6 py-5 transition-transform duration-500 hover:-translate-y-1"
-              >
+                className="reveal card flex flex-wrap items-center justify-between gap-3 px-6 py-5 transition-transform duration-500 hover:-translate-y-1" style={{ ["--d" as string]: `${i * 0.07}s` }}
+            >
                 <div>
                   <h4 className="display text-[17px]">{t.title}</h4>
                   <p className="text-[13px] text-[var(--color-muted)]">
@@ -73,7 +68,7 @@ export default function About() {
                 <span className="rounded-full bg-[var(--color-page)] px-4 py-1.5 text-[12px] text-[var(--color-muted)]">
                   {t.period}
                 </span>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

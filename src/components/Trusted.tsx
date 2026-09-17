@@ -1,6 +1,5 @@
-import { motion } from "motion/react";
 import { affiliations, profile, stats } from "../data/content";
-import { Counter, EASE } from "./Motion";
+import { Counter } from "./Motion";
 import { Spotlight } from "./Pointer";
 import { SectionHead } from "./Ui";
 
@@ -17,13 +16,9 @@ export default function Trusted() {
         {/* Numbers */}
         <div className="card mb-5 grid grid-cols-2 gap-y-10 px-6 py-10 md:grid-cols-4 md:px-10">
           {stats.map((s, i) => (
-            <motion.div
+            <div
               key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10%" }}
-              transition={{ duration: 0.85, ease: EASE, delay: i * 0.09 }}
-              className="text-center"
+              className="reveal text-center" style={{ ["--d" as string]: `${i * 0.09}s` }}
             >
               <div className="display text-[34px] leading-none md:text-[44px]">
                 <Counter to={s.value} suffix={s.suffix} />
@@ -31,20 +26,16 @@ export default function Trusted() {
               <p className="mt-2 text-[13px] text-[var(--color-muted)]">
                 {s.label}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Where that experience came from */}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {affiliations.map((a, i) => (
-            <motion.div
+            <div
               key={a.name}
-              initial={{ opacity: 0, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10%" }}
-              transition={{ duration: 0.85, ease: EASE, delay: i * 0.07 }}
-              className="card group flex items-center gap-4 px-6 py-5 transition-transform duration-[600ms] ease-out hover:-translate-y-1"
+              className="reveal card group flex items-center gap-4 px-6 py-5 transition-transform duration-[600ms] ease-out hover:-translate-y-1" style={{ ["--d" as string]: `${i * 0.07}s` }}
             >
               <Spotlight size={220} />
               <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-green)]" />
@@ -54,24 +45,16 @@ export default function Trusted() {
                   {a.note}
                 </span>
               </span>
-            </motion.div>
+            </div>
           ))}
 
-          <motion.a
+          <a
             href={`mailto:${profile.email}`}
-            initial={{ opacity: 0, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{
-              duration: 0.85,
-              ease: EASE,
-              delay: affiliations.length * 0.07,
-            }}
-            className="flex items-center justify-center gap-2 rounded-[20px] border border-dashed border-[var(--color-line-2)] px-6 py-5 text-[14px] text-[var(--color-muted)] transition-colors duration-500 hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]"
-          >
+            className="reveal flex items-center justify-center gap-2 rounded-[20px] border border-dashed border-[var(--color-line-2)] px-6 py-5 text-[14px] text-[var(--color-muted)] transition-colors duration-500 hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]" style={{ ["--d" as string]: `${affiliations.length * 0.07}s` }}
+            >
             اسمك التالي هنا
             <span aria-hidden>←</span>
-          </motion.a>
+          </a>
         </div>
       </div>
     </section>

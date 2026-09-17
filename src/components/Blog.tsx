@@ -1,7 +1,5 @@
-import { motion } from "motion/react";
 import { posts } from "../data/content";
 import { Spotlight } from "./Pointer";
-import { EASE } from "./Motion";
 import { SectionHead } from "./Ui";
 
 export default function Blog() {
@@ -15,16 +13,12 @@ export default function Blog() {
 
         <div className="grid gap-5 md:grid-cols-3">
           {posts.map((post, i) => (
-            <motion.a
+            <a
               key={post.title}
               href={post.href}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-12%" }}
-              transition={{ duration: 0.9, ease: EASE, delay: i * 0.1 }}
-              className="card group flex flex-col overflow-hidden transition-transform duration-[600ms] ease-out hover:-translate-y-1.5"
+              className="reveal card group flex flex-col overflow-hidden transition-transform duration-[600ms] ease-out hover:-translate-y-1.5" style={{ ["--d" as string]: `${i * 0.1}s` }}
             >
               <Spotlight />
               <div className="overflow-hidden">
@@ -63,7 +57,7 @@ export default function Blog() {
                   </span>
                 </div>
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
       </div>

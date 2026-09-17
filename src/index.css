@@ -197,6 +197,43 @@
       0 8px 24px -16px rgba(0, 0, 0, 0.18);
   }
 
+  /* Scroll reveal. Only `opacity` and `transform` animate, so the compositor
+     can run it off the main thread. No `filter` — blur is never composited
+     and was re-painting every element on every frame. */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    transition:
+      opacity 0.85s cubic-bezier(0.32, 0.72, 0, 1) var(--d, 0s),
+      transform 0.85s cubic-bezier(0.32, 0.72, 0, 1) var(--d, 0s);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    will-change: auto;
+  }
+
+  /* Word-by-word heading reveal, same mechanism. */
+  .reveal-head {
+    display: block;
+  }
+
+  .reveal-word {
+    display: inline-block;
+    transform: translate3d(0, 108%, 0);
+    opacity: 0;
+    transition:
+      opacity 0.9s cubic-bezier(0.32, 0.72, 0, 1) var(--d, 0s),
+      transform 0.9s cubic-bezier(0.32, 0.72, 0, 1) var(--d, 0s);
+  }
+
+  .is-in .reveal-word {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
   /* Cursor-tracked sheen inside a card. Sits above the card content at a
      very low alpha, so it warms the surface without washing out text. */
   .spotlight {
@@ -284,6 +321,12 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .reveal,
+  .reveal-word {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
   .marquee-track {
     animation: none;

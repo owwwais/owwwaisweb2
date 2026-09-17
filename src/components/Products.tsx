@@ -1,6 +1,4 @@
-import { motion } from "motion/react";
 import { Spotlight } from "./Pointer";
-import { EASE } from "./Motion";
 import { products } from "../data/content";
 import { SectionHead } from "./Ui";
 
@@ -13,13 +11,9 @@ export default function Products() {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p, i) => (
-            <motion.article
+            <article
               key={p.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.9, ease: EASE, delay: (i % 3) * 0.08 }}
-              className="card group flex flex-col p-7 transition-transform duration-500 hover:-translate-y-1.5"
+              className="reveal card group flex flex-col p-7 transition-transform duration-500 hover:-translate-y-1.5" style={{ ["--d" as string]: `${(i % 3) * 0.08}s` }}
             >
               <Spotlight />
               <span className="mono text-[11px] text-[var(--color-faint)]">
@@ -33,7 +27,7 @@ export default function Products() {
                 التفاصيل
                 <span>←</span>
               </span>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>
