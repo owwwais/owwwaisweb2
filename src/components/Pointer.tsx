@@ -1,6 +1,5 @@
 import {
   motion,
-  useMotionTemplate,
   useMotionValue,
   useReducedMotion,
   useSpring,
@@ -78,36 +77,44 @@ export function PointerField() {
     };
   }, [fine, reduce, x, y]);
 
-  const dotMask = useMotionTemplate`radial-gradient(220px 220px at ${maskX}px ${maskY}px, #000 0%, rgba(0,0,0,0.45) 45%, transparent 72%)`;
-
   if (!fine || reduce) return null;
 
   return (
     <div ref={ref} aria-hidden className="absolute inset-0 overflow-hidden">
-      {/* Warm glow trailing the cursor */}
+      {/*
+        Both layers are fixed-size elements moved with `transform` only.
+        Driving `left`/`top` would force layout on every pointer frame, and a
+        CSS blur filter on a moving element repaints a huge area each frame —
+        together those were the main cost here. A soft radial gradient needs
+        no blur filter, and a static mask needs no recomputation.
+      */}
       <motion.div
         style={{
-          left: glowX,
-          top: glowY,
+          x: glowX,
+          y: glowY,
           opacity: lit ? 1 : 0,
+          willChange: "transform",
           background:
-            "radial-gradient(circle, rgba(254,118,23,0.16) 0%, rgba(254,118,23,0.06) 38%, transparent 68%)",
+            "radial-gradient(circle closest-side, rgba(254,118,23,0.20) 0%, rgba(254,118,23,0.10) 34%, rgba(254,118,23,0.03) 58%, transparent 74%)",
         }}
-        transition={{ opacity: { duration: 0.8 } }}
-        className="absolute h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[42px] transition-opacity duration-700"
+        className="absolute -top-[300px] -left-[300px] h-[600px] w-[600px] rounded-full transition-opacity duration-700"
       />
 
-      {/* Denser dots, revealed only around the cursor */}
       <motion.div
         style={{
+          x: maskX,
+          y: maskY,
           opacity: lit ? 1 : 0,
-          WebkitMaskImage: dotMask,
-          maskImage: dotMask,
+          willChange: "transform",
           backgroundImage:
             "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.30) 1.4px, transparent 0)",
           backgroundSize: "26px 26px",
+          WebkitMaskImage:
+            "radial-gradient(circle closest-side, #000 0%, rgba(0,0,0,0.5) 46%, transparent 72%)",
+          maskImage:
+            "radial-gradient(circle closest-side, #000 0%, rgba(0,0,0,0.5) 46%, transparent 72%)",
         }}
-        className="absolute inset-0 transition-opacity duration-500"
+        className="absolute -top-[220px] -left-[220px] h-[440px] w-[440px] transition-opacity duration-500"
       />
     </div>
   );

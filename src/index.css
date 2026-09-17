@@ -53,15 +53,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-
-    /* The dot-grid canvas the reference sits on. */
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      rgba(0, 0, 0, 0.11) 1px,
-      transparent 0
-    );
-    background-size: 26px 26px;
-    background-attachment: fixed;
   }
 
   ::selection {
@@ -102,6 +93,22 @@
     max-width: var(--shell);
     margin-inline: auto;
     padding-inline: 20px;
+  }
+
+  /* The dot-grid canvas. A fixed layer rather than `background-attachment:
+     fixed` on the body, which forces a full-viewport repaint every scroll
+     frame. */
+  .canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(0, 0, 0, 0.11) 1px,
+      transparent 0
+    );
+    background-size: 26px 26px;
   }
 
   /* The two hairlines that frame the page on desktop. */

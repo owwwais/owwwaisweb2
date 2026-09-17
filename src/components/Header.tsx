@@ -75,7 +75,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 bg-[var(--color-page)]/95 backdrop-blur-xl"
+            className="fixed inset-0 z-40 bg-[var(--color-page)]"
           >
             <div className="shell flex h-full flex-col justify-center">
               {nav.map((item, i) => (
@@ -84,8 +84,8 @@ export default function Header() {
                   href={item.href}
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0, y: 26, filter: "blur(5px)" }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                   transition={{ delay: 0.08 + i * 0.07, duration: 0.6, ease: EASE }}
                   className="display group flex items-baseline gap-4 border-b border-[var(--color-line)] py-6 text-[34px] md:text-[52px]"
                 >

@@ -9,9 +9,9 @@ function Card({ p, i }: { p: Project; i: number }) {
   return (
     <motion.article
       layout
-      initial={{ opacity: 0, y: 34, filter: "blur(6px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+      initial={{ opacity: 0, y: 34 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.85, ease: EASE, delay: Math.min(i, 4) * 0.07 }}
       className="card group overflow-hidden transition-transform duration-[600ms] ease-out hover:-translate-y-1.5"
     >

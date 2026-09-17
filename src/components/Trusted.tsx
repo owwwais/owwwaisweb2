@@ -19,8 +19,8 @@ export default function Trusted() {
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 0.85, ease: EASE, delay: i * 0.09 }}
               className="text-center"
@@ -40,8 +40,8 @@ export default function Trusted() {
           {affiliations.map((a, i) => (
             <motion.div
               key={a.name}
-              initial={{ opacity: 0, y: 22, filter: "blur(5px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 0.85, ease: EASE, delay: i * 0.07 }}
               className="card group flex items-center gap-4 px-6 py-5 transition-transform duration-[600ms] ease-out hover:-translate-y-1"
@@ -59,8 +59,8 @@ export default function Trusted() {
 
           <motion.a
             href={`mailto:${profile.email}`}
-            initial={{ opacity: 0, y: 22, filter: "blur(5px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{
               duration: 0.85,

@@ -15,8 +15,8 @@ export default function Products() {
           {products.map((p, i) => (
             <motion.article
               key={p.title}
-              initial={{ opacity: 0, y: 30, filter: "blur(5px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.9, ease: EASE, delay: (i % 3) * 0.08 }}
               className="card group flex flex-col p-7 transition-transform duration-500 hover:-translate-y-1.5"

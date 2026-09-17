@@ -20,8 +20,8 @@ export default function Blog() {
               href={post.href}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 32, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-12%" }}
               transition={{ duration: 0.9, ease: EASE, delay: i * 0.1 }}
               className="card group flex flex-col overflow-hidden transition-transform duration-[600ms] ease-out hover:-translate-y-1.5"

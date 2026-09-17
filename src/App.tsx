@@ -17,7 +17,8 @@ export default function App() {
     // Framer animations are JS-driven, so the CSS reduced-motion block does not
     // reach them; this makes them honour the OS setting too.
     <MotionConfig reducedMotion="user">
-      {/* The two vertical hairlines that frame the page. */}
+      {/* Page texture and the two vertical hairlines that frame it. */}
+      <div className="canvas" aria-hidden />
       <div className="rails" aria-hidden />
 
       <Header />
