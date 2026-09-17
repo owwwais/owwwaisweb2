@@ -57,7 +57,7 @@ export default function Hero() {
     <section
       ref={ref}
       id="top"
-      className="relative overflow-hidden pt-[150px] md:pt-[190px]"
+      className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pt-[130px] pb-0 md:pt-[150px]"
     >
       <PointerField />
 
@@ -98,7 +98,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.15 }}
-        className="band mt-20 py-7 md:mt-28"
+        className="band mt-auto py-7"
       >
         <div className="shell flex flex-col items-center gap-7 md:flex-row md:justify-between">
           <div className="flex shrink-0 items-center gap-5">
@@ -114,7 +114,7 @@ export default function Hero() {
             ))}
           </div>
 
-          <div className="w-full min-w-0 md:max-w-[620px]">
+          <div className="w-full min-w-0 flex-1">
             <Marquee duration={46}>
               {stack.map((s, i) => (
                 <span

@@ -33,6 +33,18 @@
   --rail: rgba(0, 0, 0, 0.06);
 }
 
+@media (min-width: 1600px) {
+  :root {
+    --shell: 1200px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --shell: 1320px;
+  }
+}
+
 @layer base {
   * {
     box-sizing: border-box;
