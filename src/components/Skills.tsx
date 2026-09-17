@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
+import { EASE } from "./Motion";
 import { skillColumns } from "../data/content";
 import { SectionHead } from "./Ui";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 /** Three colour-headed columns — the reference's skills table. */
 export default function Skills() {
@@ -15,10 +15,10 @@ export default function Skills() {
           {skillColumns.map((col, i) => (
             <motion.div
               key={col.title}
-              initial={{ opacity: 0, y: 34 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 34, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.75, ease: EASE, delay: i * 0.12 }}
+              transition={{ duration: 0.95, ease: EASE, delay: i * 0.12 }}
               className="overflow-hidden rounded-[20px] bg-[var(--color-card)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-16px_rgba(0,0,0,0.18)]"
             >
               <div

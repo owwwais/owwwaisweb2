@@ -35,16 +35,18 @@ export type Project = {
   blurb: string;
   tags: string[];
   img: string;
+  /** Shown before the grid is expanded. */
+  featured?: boolean;
 };
 
 export const projects: Project[] = [
-  { title: "تطبيق سمو", category: "جوال", img: "/img/p01.webp",
+  { featured: true, title: "تطبيق سمو", category: "جوال", img: "/img/p01.webp",
     blurb: "رفيقك اليومي للانتظام بالطاعات والأذكار، بطريقة سهلة وممتعة.",
     tags: ["Flutter", "Dart", "AI"] },
   { title: "منصة تلقينة", category: "ويب", img: "/img/p02.webp",
     blurb: "أداة ذكية تحوّل النصوص العربية البسيطة إلى تلقينات مفصلة وفعالة.",
     tags: ["Python", "Flask", "LLM"] },
-  { title: "منصة تنصيص", category: "ويب", img: "/img/p03.webp",
+  { featured: true, title: "منصة تنصيص", category: "ويب", img: "/img/p03.webp",
     blurb: "حوّل صورك ومستنداتك إلى نصوص قابلة للتعديل في ثوانٍ، بدعم كامل للعربية.",
     tags: ["Python", "Flask", "OCR"] },
   { title: "تطبيق بصيرة", category: "جوال", img: "/img/p04.webp",
@@ -59,10 +61,10 @@ export const projects: Project[] = [
   { title: "رمز", category: "ويب", img: "/img/p07.webp",
     blurb: "روابط قصيرة باسم علامتك، ورموز QR ديناميكية، وتحليلات متقدمة للنقرات.",
     tags: ["Next.js"] },
-  { title: "منصة فهيم", category: "ويب", img: "/img/p08.webp",
+  { featured: true, title: "منصة فهيم", category: "ويب", img: "/img/p08.webp",
     blurb: "إدارة المشاريع التنموية: المراحل والمهام والميزانيات والتقارير الميدانية.",
     tags: ["AI", "Next.js"] },
-  { title: "منصة PrismIQ", category: "ذكاء اصطناعي", img: "/img/p09.webp",
+  { featured: true, title: "منصة PrismIQ", category: "ذكاء اصطناعي", img: "/img/p09.webp",
     blurb: "غرفة عمليات استراتيجية يختبر فيها نخبة من مستشاري الذكاء الاصطناعي فكرتك.",
     tags: ["Python", "Next.js", "CrewAI"] },
   { title: "الشمولية الرقمية", category: "ويب", img: "/img/p10.webp",
@@ -159,5 +161,45 @@ export const nav = [
   { label: "المشاريع", href: "#work" },
   { label: "الخدمات", href: "#services" },
   { label: "المنتجات", href: "#products" },
+  { label: "المدونة", href: "#blog" },
   { label: "الأسئلة الشائعة", href: "#faq" },
+];
+
+export const posts = [
+  {
+    title: "لا تدير وقتك، أدِر طاقتك.",
+    excerpt:
+      "الوقت متاح للجميع بالتساوي، أما التركيز العميق فمورد شحيح يتقلب خلال اليوم. كيف تقسّم يومك إلى ست فترات بدل مربعات التقويم.",
+    date: "٢ سبتمبر ٢٠٢٦",
+    tags: ["إدارة الطاقة", "الإنتاجية"],
+    img: "/img/b01.webp",
+    href: "https://owwwais.com/blog/manage-energy-not-time",
+  },
+  {
+    title: "الكمالية والتسويف: كيف كدتُ أقضي على مشاريعي بيدي؟",
+    excerpt:
+      "كيف يتحول السعي المهووس وراء الكمال إلى فخ للتسويف يقتل مشاريعك قبل أن تبدأ؟ تجربة شخصية واقعية.",
+    date: "١٤ يونيو ٢٠٢٦",
+    tags: ["الكمالية", "التسويف"],
+    img: "/img/b02.webp",
+    href: "https://owwwais.com/blog/perfectionism-and-procrastination",
+  },
+  {
+    title: "بين المهندس والمبرمج: كيف تكشف لمسة الذكاء الاصطناعي؟",
+    excerpt:
+      "هناك فرق شاسع بين من يستخدم الذكاء الاصطناعي كمسرّع ومن يتخذه عكازاً. إليك العلامات البصرية والمنطقية الفاضحة.",
+    date: "١٤ يونيو ٢٠٢٦",
+    tags: ["الذكاء الاصطناعي"],
+    img: "/img/b04.webp",
+    href: "https://owwwais.com/blog/engineer-vs-programmer-detecting-ai-apps",
+  },
+];
+
+/** Real affiliations — employers, university, certifying bodies. */
+export const affiliations = [
+  { name: "كايزن للاستشارات", note: "مستشار مساعد" },
+  { name: "مجموعة الرواد العالمية", note: "باحث ومعدّ عروض" },
+  { name: "الجامعة السعودية الإلكترونية", note: "علم البيانات" },
+  { name: "جامعة فيرجينيا · BCG", note: "قيادة الأعمال" },
+  { name: "DeepLearning.AI", note: "الذكاء الاصطناعي" },
 ];

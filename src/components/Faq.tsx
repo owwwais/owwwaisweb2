@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
+import { EASE } from "./Motion";
 import { useState } from "react";
 import { faqs } from "../data/content";
 import { SectionHead } from "./Ui";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Faq() {
   const [open, setOpen] = useState<number | null>(0);
@@ -19,10 +19,10 @@ export default function Faq() {
             return (
               <motion.div
                 key={f.q}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 22, filter: "blur(5px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.65, ease: EASE, delay: i * 0.06 }}
+                transition={{ duration: 0.9, ease: EASE, delay: i * 0.06 }}
                 className="card overflow-hidden"
               >
                 <button

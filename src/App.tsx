@@ -1,6 +1,7 @@
 import { MotionConfig } from "motion/react";
 
 import About from "./components/About";
+import Blog from "./components/Blog";
 import Faq from "./components/Faq";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -8,6 +9,7 @@ import Hero from "./components/Hero";
 import Products from "./components/Products";
 import Services from "./components/Services";
 import Skills from "./components/Skills";
+import Trusted from "./components/Trusted";
 import Work from "./components/Work";
 
 export default function App() {
@@ -26,6 +28,8 @@ export default function App() {
         <Skills />
         <Services />
         <Products />
+        <Trusted />
+        <Blog />
         <Faq />
         <Footer />
       </main>

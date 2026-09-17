@@ -1,9 +1,8 @@
 import { motion } from "motion/react";
 import { about, method, profile, timeline } from "../data/content";
-import { Reveal } from "./Motion";
+import { EASE, Reveal } from "./Motion";
 import { SectionHead } from "./Ui";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function About() {
   return (
@@ -66,10 +65,10 @@ export default function About() {
             {timeline.items.map((t, i) => (
               <motion.div
                 key={t.title}
-                initial={{ opacity: 0, y: 26 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 26, filter: "blur(5px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.7, ease: EASE, delay: i * 0.07 }}
+                transition={{ duration: 0.9, ease: EASE, delay: i * 0.07 }}
                 className="card flex flex-wrap items-center justify-between gap-3 px-6 py-5 transition-transform duration-500 hover:-translate-y-1"
               >
                 <div>

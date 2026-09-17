@@ -144,6 +144,15 @@
     color: var(--color-ink);
   }
 
+  /* Card/product titles: same face, lighter weight, clear hierarchy. */
+  .display-soft {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-feature-settings: "ss01";
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
   .lede {
     color: var(--color-muted);
     line-height: 1.95;

@@ -1,41 +1,20 @@
 import { motion } from "motion/react";
-import { cta, nav, profile, stack } from "../data/content";
-import { Marquee } from "./Motion";
-import { SectionHead } from "./Ui";
+import { EASE } from "./Motion";
+import { cta, nav, profile } from "../data/content";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <>
-      {/* Trusted-tools band */}
-      <section className="band py-16 md:py-20">
-        <SectionHead
-          as="h3"
-          text="معتمد فيمـا أحـب"
-          className="mb-10 !text-[26px] md:!text-[38px]"
-        />
-        <Marquee duration={50}>
-          {stack.map((s, i) => (
-            <span
-              key={`${s}-${i}`}
-              className="mono flex items-center gap-8 px-8 text-[15px] whitespace-nowrap text-[var(--color-faint)]"
-            >
-              {s}
-              <span className="text-[var(--color-blue)]">✦</span>
-            </span>
-          ))}
-        </Marquee>
-      </section>
-
       {/* Final CTA */}
       <section id="contact" className="band py-20 md:py-28">
         <div className="shell">
           <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 32, filter: "blur(6px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.85, ease: EASE }}
             className="card px-8 py-14 text-center md:px-12 md:py-20"
