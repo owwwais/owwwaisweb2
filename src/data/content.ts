@@ -5,9 +5,27 @@ export const profile = {
   handle: "owwwais",
   role: "مختص علوم بيانات ومستشار إداري",
   photo: "/img/profile.webp",
+  /** Line-art portrait. Falls back to `photo` until the file is added. */
+  portrait: "/img/portrait.webp",
   email: "info@owwwais.com",
   location: "الرياض، المملكة العربية السعودية",
 };
+
+/**
+ * Outbound links. The social URLs are built from the `owwwais` handle —
+ * confirm each one points where you expect before launch.
+ */
+export const links = {
+  cv: "/owwwais-cv.pdf",
+  socials: [
+    { name: "واتساب", key: "whatsapp", href: "https://wa.me/966500000000" },
+    { name: "لينكدإن", key: "linkedin", href: "https://www.linkedin.com/in/owwwais" },
+    { name: "إكس", key: "x", href: "https://x.com/owwwais" },
+    { name: "بيهانس", key: "behance", href: "https://www.behance.net/owwwais" },
+    { name: "يوتيوب", key: "youtube", href: "https://www.youtube.com/@owwwais" },
+    { name: "جيت هب", key: "github", href: "https://github.com/owwwais" },
+  ],
+} as const;
 
 export const hero = {
   title: "أويس",

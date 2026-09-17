@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
-import { about, method, profile, timeline } from "../data/content";
+import { about, method, timeline } from "../data/content";
 import { EASE, Reveal } from "./Motion";
+import ProfileCard from "./ProfileCard";
 import { SectionHead } from "./Ui";
 
 
@@ -11,21 +12,13 @@ export default function About() {
         <SectionHead text={about.heading} className="mb-12 md:mb-16" />
 
         <div className="grid gap-6 md:grid-cols-12">
-          {/* Portrait */}
-          <Reveal className="md:col-span-5">
-            <div className="card overflow-hidden p-0">
-              <img
-                src={profile.photo}
-                alt={profile.name}
-                loading="lazy"
-                className="aspect-[4/5] w-full object-cover"
-              />
-            </div>
-          </Reveal>
+          <div className="md:col-span-5">
+            <ProfileCard />
+          </div>
 
           {/* Bio */}
           <Reveal delay={0.1} className="md:col-span-7">
-            <div className="card h-full p-7 md:p-9">
+            <div className="card flex h-full flex-col justify-center p-7 md:p-9">
               {about.paragraphs.map((p, i) => (
                 <p
                   key={i}
